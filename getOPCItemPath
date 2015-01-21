@@ -1,0 +1,8 @@
+opc = system.tag.read('[SWAT]SWAT/SWD/ROCKER B 185D HW SWD/tank/run/tank01/alarms/alarm high/value.OPCItemPath').value
+x1 = opc.find('.') + 1
+channel = opc[:x1]
+opc = opc[x1:]
+x2 = opc.find('.') + 1
+device = opc[:x2]
+OPCItemPath = channel + device
+print OPCItemPath
