@@ -1,0 +1,48 @@
+SELECT
+	d.NodeID,
+	d.PumpDepth,
+	d.TubingPressure,
+	d.CasingPressure,
+	d.SPM,
+	d.StrokeLength,
+	p.APIDesignation,
+	n.CommStatus,
+	n.LastGoodScanTime,
+	n.RunStatus,
+	n.TodayRuntime,
+	t.Description,
+	n.TodayRuntimePct,
+	n.YestRuntimePct,
+	n.PctCommYest,
+	n.LastAlarmDate,
+	d.Runtime,
+	d.WaterCut,
+	d.WaterSG,
+	d.OilAPIGravity,
+	d.FluidLevel,
+	d.GrossRate,
+	d.Rotation,
+	d.MotorHP,
+	d.Cycles,
+	d.LastTestDate,
+	d.FluidTemp,
+	d.ElectricityCost,
+	d.PeakLoad,
+	d.MinLoad,
+	d.IdleTime, 
+	d.CBCrankAngle,
+	d.PlungerDiam,
+	s.StringName,
+	n.AdhocGroup1,
+	n.AdHocGroup2,
+	n.AdHocGroup3
+FROM
+	tblNodeMaster n
+LEFT JOIN tblWellDetails d ON d.NodeID = n.NodeID
+LEFT JOIN tblPumpingUnits p ON d.PumpingUnitID = p.UnitID
+LEFT JOIN tblPOCTypes t ON n.POCType = t.POCType
+Left JOIN tblStrings s ON n.StringID = s.StringID
+WHERE n.DataCollection = 'True'
+AND n.StringID = {Root Container.selectedAssetID}
+AND n.POCType = 8
+ORDER BY NodeID
