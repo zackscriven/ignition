@@ -1,0 +1,30 @@
+#SELECT * FROM permian_tag_table WHERE ignsite != '' and igntagpath != '' and ignparentpath != ''
+
+#if event.source.parent.getComponent('Tab Strip').selectedTab == 'ignfullpath':
+if system.gui.confirm('Are you sure you want to set full Tag Path?','Continue'):
+
+	db = event.source.parent.databaseConnection
+	table = event.source.parent.table
+	
+	query = "SELECT id, ignparentpath, ignsite, shortDescription FROM %s" % table
+	data = system.db.runQuery(query,db)
+	
+	for row in data:
+	
+		id = row[0]
+		ignparentpath= row[1]
+		ignsite= row[2]
+		shortDescription= row[3]
+		
+		x1 = ignparentpath.rfind(']') + 1
+		x2 = ignparentpath.rfind('/')
+		asset = ignparentpath[x1:x2]
+		
+		description = asset + ' - ' + ignsite + ' - ' +  shortDescription
+		
+		query = "UPDATE %s SET description = ? WHERE id = ?"%(table)
+		args = [description,id]
+
+		system.db.runSFPrepUpdate(query,args,[db])
+
+	system.gui.messageBox('Complete','Complete')
