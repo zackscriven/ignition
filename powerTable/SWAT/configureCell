@@ -1,0 +1,22 @@
+	# This example adds alternating background color:
+#	if selected:
+#		return {'background': self.selectionBackground}
+#	elif rowView % 2 == 0:
+#		return {'background': 'white'}
+#	else:
+#		return {'background': '#DDDDDD'}
+	comp = self.parent.getComponent('Dropdown')
+	color = comp.selectedStringValue
+	
+	#below we are looking for 'Oil Pump Status' and 'Water Pump Status' and changing the text in the cell to say 'Running', 'Stopped' or 'Error'
+	if colName in ('Oil Pump Status','Water Pump Status'):
+		if value == None:
+			return {'text':'Error','background':color}
+			
+		elif value == 1:
+			return {'text':'Running','background': 'white'}
+		else:
+			return {'text':'Stopped','background': 'white'}
+			
+	elif self.selectedRow != rowIndex:
+		return {'background': 'white'}		
