@@ -1,0 +1,15 @@
+SELECT
+	w.TestDate AS 'time_stamp',
+	w.OilRate,
+	w.WaterRate,
+	w.GasRate
+FROM
+	tblWellTests w
+WHERE
+	w.NodeID = '{Root Container.selectedWell}'
+AND
+	w.TestDate Between '{Root Container.Date Range.startDate}'
+AND
+	'{Root Container.Date Range.endDate}'
+ORDER BY
+	TestDate DESC
