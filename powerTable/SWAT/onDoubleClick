@@ -1,0 +1,7 @@
+	# put your code here
+	# self.window is a reference to a custom property on this table, this is the window that opens on double-click.  self.parent.udtPaths is a custom property on the root container that contains
+	# udtPaths in a dataSet.  The udtPath is in column 0 and is pulled from the rowIndex of the selected cell the user double-clicks on.
+	windowPath = self.window
+	tagPath = self.parent.udtPaths.getValueAt(rowIndex, 0)
+	params = {'tagPath':tagPath}
+	system.nav.swapTo(windowPath,params)
