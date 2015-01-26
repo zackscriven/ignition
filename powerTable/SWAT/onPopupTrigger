@@ -1,0 +1,51 @@
+	import system
+	
+	self.selectedRow = rowIndex
+	
+	udtPath = self.parent.udtPaths.getValueAt(rowIndex, 0)
+	tagPath = self.parent.tagPaths.getValueAt(colIndex-1, 0) # col index minus 1 because site is not part of tagPaths dataset. but part of columns
+	tagPath = udtPath + tagPath
+	
+	
+	
+	def demandPoll(event,self=self):
+		import system
+		udtPath = self.parent.udtPaths.getValueAt(rowIndex, 0)
+		tagPath = self.parent.tagPaths.getValueAt(10, 0)
+		tagPath = udtPath + tagPath
+		shared.kepware.device.demandPoll(tagPath)
+	
+	def addPenCtg(event,tagPath=tagPath): #function def to add a pen to a graph
+		import system
+		system.ctg.addPen(tagPath) #add a pen for our tagPath
+		
+	def removePenCtg(event,tagPath=tagPath): #function def to remove a pen to a graph
+		import system	
+		system.ctg.deletePen(str(tagPath)) #remove a pen for our tagPath		
+		
+	def clearGraphCtg(event):
+		import system
+		system.ctg.clearPens() #remove all the pens from our CTG
+		
+	def openCtg(event,tagPath=tagPath):
+		import system
+		system.ctg.openGraph() #open CTG window
+		
+	itemsList = []
+	itemsFunc = []
+	
+	if tagPath in system.ctg.getPensList():
+		itemsList.append('Remove from Trend')
+		itemsFunc.append(removePenCtg)
+	else:	
+		itemsList.append('Add to Trend')
+		itemsFunc.append(addPenCtg)
+	itemsList.append('Clear Trend')
+	itemsFunc.append(clearGraphCtg)
+	itemsList.append('Show Trend')
+	itemsFunc.append(openCtg)
+	itemsList.append('Demand Poll')
+	itemsFunc.append(demandPoll)
+	
+	menu = system.gui.createPopupMenu(itemsList,itemsFunc)
+	menu.show(event)
