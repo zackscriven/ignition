@@ -1,0 +1,26 @@
+def ioCheck(pPath):
+
+	paths = []
+	
+	for tag in system.tag.browseTags(parentPath = pPath, recursive = 1):
+		if tag.name == 'value':
+			paths.append(tag.fullPath)
+	values = system.tag.readAll(paths)
+	
+	headers = ['TagPath','Value','TimeStamp','Quality']
+	row = []
+	data = []
+	
+	x = 0
+	for value in values:
+		row = []
+		row.append(paths[x])
+		row.append(value.value)
+		row.append(value.timestamp)
+		row.append(value.quality)
+		data.append(row)
+		x += 1
+	
+	dataset = system.dataset.toDataSet(headers, data)
+	system.dataset.exportCSV(pPath, 1, dataset)
+	
