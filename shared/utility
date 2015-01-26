@@ -1,0 +1,64 @@
+def showPopup(event,menuNames,menuFunctions):
+	import system
+	menu = system.gui.createPopupMenu(menuNames, menuFunctions)
+	menu.show(event,event.x,event.y)
+
+def showNotes(event):
+	from system.window import openWindowInstance
+	openWindowInstance("Notes",event.source.parent.Analog.Meta.TagName, "Tag")
+
+def showWiki(event):
+	from system.window import openWindowInstance
+	openWindowInstance("WikiView",event.source.parent.Analog.Meta.TagName,"pagename")
+
+def findDesigner():
+	import system
+	for row in system.util.getSessionInfo():
+		if row["isDesigner"]:
+			return 1
+	return 0
+
+def showAudit(event):
+	from system.nav import swapTo
+	window = swapTo('Audit Log')
+	window.rootContainer.getComponent('Options').getComponent('SearchField').text = event.source.parent.Analog.Meta.TagPath
+
+def showAlerts(event):
+	from system.window import openWindowInstance
+	openWindowInstance('Alert Query',event.source.tagPath)
+
+def menuDelete(tagPath):
+	from system.ctg import deletePen
+	print str(tagPath)
+	deletePen(tagPath)
+
+def menuAdd(tagPath):
+	from system.ctg import addPen
+	print str(tagPath)
+	addPen(tagPath)
+
+def menuOpenGraph(event):
+	from system.ctg import openGraph
+	openGraph()
+
+def menuClearGraph(event):
+	from system.ctg import clearPens
+	clearPens()
+
+def getCurrentOrLastGoodValue(basePath):
+	import system
+	tagData = system.tag.read(basePath)
+	value = tagData.getValue()
+	if str(tagData.getQuality()) != 'Good':
+		tagPaths = ['[historian]'+basePath]
+		data = system.tag.queryTagHistory(paths=tagPaths,aggregationMode="LastValue", returnSize=1, ignoreBadQuality=1)
+		value = data.getValueAt(0,1)	
+	return value
+	
+	
+def mouseover(tagPath):
+	import system
+	propertyPath = tagPath + ".OPCItemPath"
+	OPCItemPath = system.tag.read(propertyPath)
+	return OPCItemPath.value
+
