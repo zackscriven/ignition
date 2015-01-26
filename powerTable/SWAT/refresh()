@@ -1,0 +1,3 @@
+	def update(self=self): #this is the definition of the function update
+		self.updateTable() #this runs the custom method updateTable which populates the data in the table
+	system.util.invokeAsynchronous(update) #this utility runs the function in the background to prevent pauses in the runtime
