@@ -1,0 +1,35 @@
+	import system
+	
+	path = self.data.getValueAt(rowIndex,'path')
+	
+	def openSite(event,path = path):
+		import system
+		
+		if path == "PWM/Hutt ODaniel" or path == "[PWM]PWM/Hutt ODaniel":
+			window = 'PWM/Hutt/Pit Volume'	
+		else:	
+			window = 'PWM/Pit Volume'
+			
+		system.nav.openWindow(window, {'tagPath' : path})
+		system.nav.centerWindow(window)
+		
+	if colIndex == 1:
+		site = value
+	
+	else:
+		site = 'none selected'
+	
+	def sayHello(evt, cellValue=value):
+		import system
+		system.gui.messageBox('Hello, you clicked on %s'%cellValue)
+		
+	def alarms(evt):
+		import system
+		system.nav.swapTo('Alarms/Alarm Overview')
+		
+	def trends(evt):
+		import system
+		system.nav.swapTo('Trending/Adhoc Trending')
+		
+	menu = system.gui.createPopupMenu({'Hello':sayHello, 'Alarms':alarms, 'Trends':trends, 'Navigate to ' + site:openSite})
+	menu.show(event)
