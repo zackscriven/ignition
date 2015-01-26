@@ -1,0 +1,122 @@
+def toCurrentWindow(tagPath): #adds pens to the easy chart on current window
+	import system	
+		
+	colors=['FF5555', '5555FF', '55FF55', 'FF55FF', '55FFFF', 'FFAFAF', '808080', 'C00000', '0000C0', '00C000', 'C0C000', 'C000C0','00C0C0', 'FFFF55', 'FF4040', '4040FF', '40FF40', 'FFFF40', 'FF40FF', '40FFFF', 'C0C0C0', '800000', '000080', '008000', '808000', '800080', '008080', 'FF8080', '8080FF', '80FF80', 'FFFF80', 'FF80FF', '80FFFF', 'FF5555', '5555FF', '55FF55', 'FF55FF', '55FFFF', 'FFAFAF', '808080', 'C00000', '0000C0', '00C000', 'C0C000', 'C000C0','00C0C0', 'FFFF55', 'FF4040', '4040FF', '40FF40', 'FFFF40', 'FF40FF', '40FFFF', 'C0C0C0', '800000', '000080', '008000', '808000', '800080', '008080', 'FF8080', '8080FF', '80FF80', 'FFFF80', 'FF80FF', '80FFFF', 'FF5555', '5555FF', '55FF55', 'FF55FF', '55FFFF', 'FFAFAF', '808080', 'C00000', '0000C0', '00C000', 'C0C000', 'C000C0','00C0C0', 'FFFF55', 'FF4040', '4040FF', '40FF40', 'FFFF40', 'FF40FF', '40FFFF', 'C0C0C0', '800000', '000080', '008000', '808000', '800080', '008080', 'FF8080', '8080FF', '80FF80', 'FFFF80', 'FF80FF', '80FFFF', 'FF5555', '5555FF', '55FF55', 'FF55FF', '55FFFF', 'FFAFAF', '808080', 'C00000', '0000C0', '00C000', 'C0C000', 'C000C0','00C0C0', 'FFFF55', 'FF4040', '4040FF', '40FF40', 'FFFF40', 'FF40FF', '40FFFF', 'C0C0C0', '800000', '000080', '008000', '808000', '800080', '008080', 'FF8080', '8080FF', '80FF80', 'FFFF80', 'FF80FF', '80FFFF', 'FF5555', '5555FF', '55FF55', 'FF55FF', '55FFFF', 'FFAFAF', '808080', 'C00000', '0000C0', '00C000', 'C0C000', 'C000C0','00C0C0', 'FFFF55', 'FF4040', '4040FF', '40FF40', 'FFFF40', 'FF40FF', '40FFFF', 'C0C0C0', '800000', '000080', '008000', '808000', '800080', '008080', 'FF8080', '8080FF', '80FF80', 'FFFF80', 'FF80FF', '80FFFF', 'FF5555', '5555FF', '55FF55', 'FF55FF', '55FFFF', 'FFAFAF', '808080', 'C00000', '0000C0', '00C000', 'C0C000', 'C000C0','00C0C0', 'FFFF55', 'FF4040', '4040FF', '40FF40', 'FFFF40', 'FF40FF', '40FFFF', 'C0C0C0', '800000', '000080', '008000', '808000', '800080', '008080', 'FF8080', '8080FF', '80FF80', 'FFFF80', 'FF80FF', '80FFFF', 'FF5555', '5555FF', '55FF55', 'FF55FF', '55FFFF', 'FFAFAF', '808080', 'C00000', '0000C0', '00C000', 'C0C000', 'C000C0','00C0C0', 'FFFF55', 'FF4040', '4040FF', '40FF40', 'FFFF40', 'FF40FF', '40FFFF', 'C0C0C0', '800000', '000080', '008000', '808000', '800080', '008080', 'FF8080', '8080FF', '80FF80', 'FFFF80', 'FF80FF', '80FFFF']
+	headers = ['NAME', 'TAG_PATH', 'AGGREGATION', 'AXIS', 'SUBPLOT', 'ENABLED', 'COLOR', 'DASH_PATTERN', 'RENDER_STYLE', 'LINE_WEIGHT', 'SHAPE', 'FILL_SHAPE', 'GROUP_NAME', 'DIGITAL', 'OVERRIDE_AUTOCOLOR', 'HIDDEN', 'USER_SELECTABLE', 'SORT_ORDER', 'USER_REMOVABLE']
+		
+	
+	folderPath = tagPath[:tagPath.rfind('/')] # walk up one layer to get to the metadata folder
+	metaPath = folderPath + '/metadata/description' #go get metadata description
+	tagPath = '[/.'+ tagPath[1:] #convert the tagPath to a historical tagPath
+	
+	# create a list of tags to read
+	readPaths = []
+	readPaths.append('[Client]ctg/currentWindowPens')
+	readPaths.append(metaPath)
+		
+	# read all tags and place in variables
+	values = system.tag.readAll(readPaths)
+	currentWindowPens = values[0].value
+	metadata = values[1].value
+	
+	# grab our length of dataset.
+	x = currentWindowPens.rowCount
+
+	row = []
+	row.append(metadata)              			 #Name - append pen name
+	row.append(tagPath) 					#Tag Path
+	row.append('MinMax')                    #Aggregation
+	row.append('Default Axis')              #Axis
+	row.append('1')                         #Subplot
+	row.append('1')                         #Enabled
+	row.append(colors[x])             		#Color - as we build our tag pens dataset, and build the data 
+	row.append('')                          #Dash Pattern
+	row.append('1')                         #Render Style
+	row.append('1')                         #Line Weight
+	row.append('0')                         #Shape
+	row.append('1')                         #Fill Shape
+	row.append('')                          #Group Name
+	row.append('0')                         #Digital
+	row.append('0')                         #Override Autocolor
+	row.append('0')                         #Hidden
+	row.append('1')                         #User Selectable
+	row.append('')                          #Sort Order
+	row.append('1')                         #User Removable
+	
+	
+	dataset = system.dataset.addRow(currentWindowPens,row)
+	writePath = '[Client]ctg/currentWindowPens'
+	system.tag.write(writePath,dataset)
+
+#$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+def ctgPens():
+	import system
+	colors=['FF5555', '5555FF', '55FF55', 'FF55FF', '55FFFF', 'FFAFAF', '808080', 'C00000', '0000C0', '00C000', 'C0C000', 'C000C0','00C0C0', 'FFFF55', 'FF4040', '4040FF', '40FF40', 'FFFF40', 'FF40FF', '40FFFF', 'C0C0C0', '800000', '000080', '008000', '808000', '800080', '008080', 'FF8080', '8080FF', '80FF80', 'FFFF80', 'FF80FF', '80FFFF', 'FF5555', '5555FF', '55FF55', 'FF55FF', '55FFFF', 'FFAFAF', '808080', 'C00000', '0000C0', '00C000', 'C0C000', 'C000C0','00C0C0', 'FFFF55', 'FF4040', '4040FF', '40FF40', 'FFFF40', 'FF40FF', '40FFFF', 'C0C0C0', '800000', '000080', '008000', '808000', '800080', '008080', 'FF8080', '8080FF', '80FF80', 'FFFF80', 'FF80FF', '80FFFF', 'FF5555', '5555FF', '55FF55', 'FF55FF', '55FFFF', 'FFAFAF', '808080', 'C00000', '0000C0', '00C000', 'C0C000', 'C000C0','00C0C0', 'FFFF55', 'FF4040', '4040FF', '40FF40', 'FFFF40', 'FF40FF', '40FFFF', 'C0C0C0', '800000', '000080', '008000', '808000', '800080', '008080', 'FF8080', '8080FF', '80FF80', 'FFFF80', 'FF80FF', '80FFFF', 'FF5555', '5555FF', '55FF55', 'FF55FF', '55FFFF', 'FFAFAF', '808080', 'C00000', '0000C0', '00C000', 'C0C000', 'C000C0','00C0C0', 'FFFF55', 'FF4040', '4040FF', '40FF40', 'FFFF40', 'FF40FF', '40FFFF', 'C0C0C0', '800000', '000080', '008000', '808000', '800080', '008080', 'FF8080', '8080FF', '80FF80', 'FFFF80', 'FF80FF', '80FFFF', 'FF5555', '5555FF', '55FF55', 'FF55FF', '55FFFF', 'FFAFAF', '808080', 'C00000', '0000C0', '00C000', 'C0C000', 'C000C0','00C0C0', 'FFFF55', 'FF4040', '4040FF', '40FF40', 'FFFF40', 'FF40FF', '40FFFF', 'C0C0C0', '800000', '000080', '008000', '808000', '800080', '008080', 'FF8080', '8080FF', '80FF80', 'FFFF80', 'FF80FF', '80FFFF', 'FF5555', '5555FF', '55FF55', 'FF55FF', '55FFFF', 'FFAFAF', '808080', 'C00000', '0000C0', '00C000', 'C0C000', 'C000C0','00C0C0', 'FFFF55', 'FF4040', '4040FF', '40FF40', 'FFFF40', 'FF40FF', '40FFFF', 'C0C0C0', '800000', '000080', '008000', '808000', '800080', '008080', 'FF8080', '8080FF', '80FF80', 'FFFF80', 'FF80FF', '80FFFF', 'FF5555', '5555FF', '55FF55', 'FF55FF', '55FFFF', 'FFAFAF', '808080', 'C00000', '0000C0', '00C000', 'C0C000', 'C000C0','00C0C0', 'FFFF55', 'FF4040', '4040FF', '40FF40', 'FFFF40', 'FF40FF', '40FFFF', 'C0C0C0', '800000', '000080', '008000', '808000', '800080', '008080', 'FF8080', '8080FF', '80FF80', 'FFFF80', 'FF80FF', '80FFFF']
+	pens = system.ctg.getPensList()	#grab list of all our pens
+	
+	pens = ['[/.' + val[1:] for val in pens] #convert the tagPath to a historical tagPath
+		
+	penNames = [val[val.rfind('/')+1:] for val in pens]
+	
+				
+	headers = ['NAME', 'TAG_PATH', 'AGGREGATION', 'AXIS', 'SUBPLOT', 'ENABLED', 'COLOR', 'DASH_PATTERN', 'RENDER_STYLE', 'LINE_WEIGHT', 'SHAPE', 'FILL_SHAPE', 'GROUP_NAME', 'DIGITAL', 'OVERRIDE_AUTOCOLOR', 'HIDDEN', 'USER_SELECTABLE', 'SORT_ORDER', 'USER_REMOVABLE']
+	
+	rows = []
+	for num in range(len(pens)): #loop thru pens
+		rowVals = []
+		rowVals.append(penNames[num])               #Name - append pen name
+		rowVals.append(pens[num]) 					#Tag Path
+		rowVals.append('MinMax')                    #Aggregation
+		rowVals.append('Default Axis')              #Axis
+		rowVals.append('1')                         #Subplot
+		rowVals.append('1')                         #Enabled
+		rowVals.append(colors[num])             	#Color - as we build our tag pens dataset, and build the data 
+		rowVals.append('')                          #Dash Pattern
+		rowVals.append('1')                         #Render Style
+		rowVals.append('1')                         #Line Weight
+		rowVals.append('0')                         #Shape
+		rowVals.append('1')                         #Fill Shape
+		rowVals.append('')                          #Group Name
+		rowVals.append('0')                         #Digital
+		rowVals.append('0')                         #Override Autocolor
+		rowVals.append('0')                         #Hidden
+		rowVals.append('1')                         #User Selectable
+		rowVals.append('')                          #Sort Order
+		rowVals.append('1')                         #User Removable
+		
+		rows.append(rowVals)
+	
+	dataset = system.dataset.toDataSet(headers, rows) #create a dataset of all our pens	
+	writePath = '[Client]ctg/ctgWindowPens' #path to our client tag
+	system.tag.write(writePath,dataset) #write our new dataset to this tag
+		
+					
+
+#$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+def fromCurrentWindow(tagPath): #function that removes a pen from the current window
+	import system
+	tagPath = '[/.'+ tagPath[1:] #convert the tagPath to a historical tagPath
+	dataset = system.tag.read('[Client]ctg/currentWindowPens') #read the CTG client tag; the dataset that will populate our current window trend chart 
+	dataset = dataset.value	#Grab the dataset data
+	dsLen = dataset.rowCount #Grab the count of our dataset
+	tagPathCol = "TAG_PATH" #variable used to represent tagPath column; iteration variable
+
+	for row in range(dataset.rowCount): #Loop that iterates through our dataset row by row
+		if dataset.getValueAt(row,tagPathCol) == tagPath: #as we loop through each dataset row check if the selected tagPath is the same as the tagPath in our dataset
+			dataset = system.dataset.deleteRow(dataset,row) #if the tagPath is the same (the selected) delete that entire row
+			break #break out of the loop
+			
+	system.tag.write('[Client]ctg/currentWindowPens',dataset) #write the modified dataset back to our tag pens dataset
+
+
+
+
+#$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+def clearCurrentWindow(): #function that clears all pens from the current window
+	import system
+	dataset = system.tag.read('[Client]ctg/currentWindowPens') #read the CTG client tag; the dataset that will populate our current window trend chart 
+	dataset = dataset.value	#Grab the dataset data
+	dsLen = dataset.rowCount #Grab the count of our dataset
+	dataset = system.dataset.deleteRows(dataset,range(dsLen)) #delete all the rows of our dataset and create new empty dataset
+	system.tag.write('[Client]ctg/currentWindowPens',dataset) #write the empty dataset to our tag thus clearing all pens
