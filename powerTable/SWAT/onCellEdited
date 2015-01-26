@@ -1,0 +1,6 @@
+	import system
+	udtPath = self.parent.udtPaths.getValueAt(rowIndex, 0)
+	tagPath = self.parent.tagPaths.getValueAt(colIndex-1, 0)
+	path = udtPath + tagPath
+	system.tag.write(path, newValue)
+	self.refresh()
