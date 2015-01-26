@@ -1,0 +1,28 @@
+#####################################################################################################################################################
+#####################################################################################################################################################
+def ignfullpath(tableName, db, siteName):
+	def update(tableName = tableName, db = db, siteName = siteName):
+		query = "SELECT id, ignparentpath, ignsite, igntagpath FROM %s where ignsite = ?" % tableName
+		args = [siteName]
+		data = system.db.runPrepQuery(query, args, db)
+	
+		for row in data:
+		
+			id = row[0]
+			ignparentpath= row[1]
+			ignsite= row[2]
+			igntagpath= row[3]
+			
+			ignfullpath = ignparentpath + '/' + ignsite + igntagpath
+			
+			query = "UPDATE %s SET ignfullpath = ? WHERE id = ?" % tableName
+			args = [ignfullpath,id]
+			system.db.runSFPrepUpdate(query, args, [db])
+	
+	system.util.invokeAsynchronous(update)
+	message = 'Finished updating Full Tag Paths for site %s' % siteName
+	title = 'Complete'
+	system.gui.messageBox(message,title)
+#####################################################################################################################################################
+#####################################################################################################################################################
+
