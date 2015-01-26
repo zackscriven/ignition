@@ -1,0 +1,96 @@
+"""
+0   id, 1  wwtag,   2   wwdesc,   3   wwref,   4   wwgroup,   5   wwacces,   6   wwitem,   7   wwaddress,   8   wwdatatype,   9   kepchannel,   10   kepdevice,   11   kepdatatype
+12   ignsite,    13    ignfullpath,   14   ignparentpath,   15   ignudtpath,   16   igntagpath,   17   igndatatype,   18   ignopcpath
+		19	alarm,		20	   ScaleMode,	  21   RawLow,          22   RawHigh,      23   ScaledLow,    24   ScaledHigh,    25   EngUnit,     26	EngLow,  27 EngHigh
+
+"""
+
+from java.util import Date
+
+def routeBind(tPath):
+	cnt = tPath.count('/')
+	dot = '../'
+	
+	string = '[.]'
+	for num in range(cnt):
+		string += dot
+	string += 'metadata/route'
+	return string
+
+def update(event = event):
+	start = Date()
+	
+	db = event.source.parent.databaseConnection
+	table = event.source.parent.table
+	
+	query = "SELECT * FROM %s where ignfullpath != '' and wwaddress != 'NONE'"%table
+	pds = system.db.runQuery(query,db)
+
+	for row in pds:
+		id = row[0]
+		wwtag = row[1]
+		wwdesc = row[2]
+		wwref = row[3]
+		wwgroup = row[4]
+		wwaccess = row[5]
+		wwitem = row[6]
+		wwaddress = row[7]
+		wwdatatype = row[8]
+		kepchannel = row[9]
+		kepdevice = row[10]
+		kepdatatype = row[11]
+		ignsite = row[12]
+		ignfullpath = row[13]
+		ignparentpath = row[14]
+		ignudtpath = row[15]
+		igntagpath = row[16]
+		igndatatype = row[17]
+		ignopcpath = row[18]
+		alarm = row[19]
+		ScaleMode = row[20]
+		RawLow = row[21]
+		RawHigh = row[22]
+		ScaledLow = row[23]
+		ScaledHigh = row[24]
+		EngUnit = row[25]
+		EngLow = row[26]
+		EngHigh = row[27]
+		description = row[28]
+		shortDescription = row[29]
+		
+		docString = wwtag + ' - ' + wwdesc
+		
+		x = ignfullpath.rfind('/')
+		pPath = ignfullpath[0:x]
+		udtName = ignfullpath[x+1:]
+
+		if system.tag.exists(ignfullpath):
+
+			routebind = routeBind(igntagpath)
+			
+			system.tag.editTag(tagPath = ignfullpath,\
+			parameters = {"address": wwaddress,"channel":kepchannel,"device":kepdevice,"data":kepdatatype,"alarmDescription":wwdesc,"routeBind":routebind},\
+			overrides = {"value":{"Tooltip":ignopcpath, "Documentation":docString, "ScaleMode":ScaleMode, "RawLow":RawLow, "RawHigh":RawHigh, "ScaledLow":ScaledLow, "ScaledHigh":ScaledHigh, "EngUnit":EngUnit, "EngLow":EngLow, "EngHigh":EngHigh},
+			"metadata/description":{"Value":description},
+			"metadata/short description":{"Value":shortDescription}})
+
+		else:#tag does not exist create tag
+
+			routebind = routeBind(igntagpath)
+				
+			system.tag.addTag(parentPath = pPath, name = udtName, tagType="UDT_INST",\
+			attributes = {"UDTParentType": ignudtpath},\
+			parameters = {"address": wwaddress,"channel":kepchannel,"device":kepdevice,"data":kepdatatype,"alarmDescription":wwdesc,"routeBind":routebind},\
+			overrides = {"value":{"Tooltip":ignopcpath, "Documentation":docString, "ScaleMode":ScaleMode, "RawLow":RawLow, "RawHigh":RawHigh, "ScaledLow":ScaledLow, "ScaledHigh":ScaledHigh, "EngUnit":EngUnit, "EngLow":EngLow, "EngHigh":EngHigh},
+			"metadata/description":{"Value":description},
+			"metadata/short description":{"Value":shortDescription}})
+
+
+	end = Date()
+	print "Finished Creating Tags in:", str((end.time-start.time)/1000.0)
+	
+		
+if system.gui.confirm('Are you sure you want to create/edit UDTs?','Continue'):
+	system.util.invokeAsynchronous(update)
+
+#	system.gui.messageBox('complete','complete')
