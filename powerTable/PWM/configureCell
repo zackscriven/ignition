@@ -1,0 +1,7 @@
+	if colName in ('Pump 101','Pump 102'):
+		if value == None:
+			return {'text':'Error'}
+		elif value:
+			return {'iconPath':'Kymera/16/pilot_light_green.png','text':'Running'}
+		else:
+			return {'iconPath':'Kymera/16/pilot_light_red.png','text':'Stopped'}
