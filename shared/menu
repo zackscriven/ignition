@@ -1,0 +1,156 @@
+def analog(event):
+	import system
+	from shared.utility import showNotes, showWiki, showAlerts, showAudit, showPopup, menuAdd, menuDelete, menuOpenGraph, menuClearGraph
+	
+	if event.button == event.BUTTON1:	
+		if event.source.window != "":
+			system.window.openWindowInstance(event.source.window,event.source.tagPath,{"tagPath":event.source.tagPath})
+		
+	elif event.button == event.BUTTON3:
+	
+		menuNames = []
+		menuFunctions = []
+	
+		#menuNames.append("Notes")
+		#menuFunctions.append(showNotes)
+	
+		#menuNames.append("Wiki")
+		#menuFunctions.append(showWiki)
+	
+		#menuNames.append("Alerts")
+		#menuFunctions.append(showAlerts)
+	
+		#menuNames.append("Audit")
+		#menuFunctions.append(showAudit)
+	
+		for i in range(event.source.functions.getRowCount()):
+			menuNames.append(event.source.functions.getValueAt(i,"text"))
+			menuFunctions.append(eval(event.source.functions.getValueAt(i,"function")))
+		
+		tagPath = str.lower(str(event.source.tagPath+"/value"))
+			
+		if system.ctg.findPen(tagPath)>0:
+			def delPen(event):
+				from shared.utility import menuDelete
+				menuDelete(tagPath)
+			menuNames.append("(-) Delete From Graph")
+			menuFunctions.append(delPen)
+		else:
+			def addPen(event):
+				from shared.utility import menuAdd
+				menuAdd(tagPath)
+			menuNames.append("(+) Add To Graph")
+			menuFunctions.append(addPen)
+		if len(system.ctg.getPensString())>2:
+			menuNames.append("Clear Graph")
+			menuFunctions.append(menuClearGraph)
+	
+			menuNames.append("Open Current Graph")
+			menuFunctions.append(menuOpenGraph)
+	
+		showPopup(event,menuNames,menuFunctions)
+
+def motor(event):
+	import system
+	from shared.utility import showNotes, showWiki, showAlerts, showAudit, showPopup, menuAdd, menuDelete, menuOpenGraph, menuClearGraph
+
+	if event.button == event.BUTTON1:
+	
+#		roles = system.security.getRoles()
+#		ip = system.net.getExternalIpAddress()
+
+		if event.source.window != "":
+			system.window.openWindowInstance(event.source.window,event.source.tagPath,{"tagPath":event.source.tagPath})
+						
+	elif event.button == event.BUTTON3:
+	
+		menuNames = []
+		menuFunctions = []
+
+		menuNames.append("Notes")
+		menuFunctions.append(showNotes)
+
+		menuNames.append("Wiki")
+		menuFunctions.append(showWiki)
+
+		#menuNames.append("Alerts")
+		#menuFunctions.append(showAlerts)
+
+		#menuNames.append("Audit")
+		#menuFunctions.append(showAudit)
+
+		for i in range(event.source.functions.getRowCount()):
+			menuNames.append(event.source.functions.getValueAt(i,"text"))
+			menuFunctions.append(eval(event.source.functions.getValueAt(i,"function")))
+
+		tagPath = str.lower(str(event.source.tagPath+"/run_status"))
+		if system.ctg.findPen(tagPath)>=0:
+			def delPen(event):
+				from shared.utility import menuDelete
+				menuDelete(tagPath)
+			menuNames.append("(-) Delete From Graph")
+			menuFunctions.append(delPen)
+		else:
+			def addPen(event):
+				from shared.utility import menuAdd
+				menuAdd(tagPath)
+			menuNames.append("(+) Add To Graph")
+			menuFunctions.append(addPen)
+		if len(system.ctg.getPensString()):
+			menuNames.append("Clear Graph")
+			menuFunctions.append(menuClearGraph)
+
+			menuNames.append("Open Current Graph")
+			menuFunctions.append(menuOpenGraph)
+
+		showPopup(event,menuNames,menuFunctions)
+				
+def pid(event):
+	import system
+	from shared.utility import showNotes, showWiki, showAlerts, showAudit, showPopup, menuAdd, menuDelete, menuOpenGraph, menuClearGraph
+	if event.button == event.BUTTON1:
+	
+#		roles = system.security.getRoles()
+#		ip = system.net.getExternalIpAddress()
+	
+		if 1 == 1:
+			system.window.openWindowInstance("PID",event.source.tagPath,"tagPath")
+		else:
+			system.gui.warningBox("You do not have permission to view this item")
+			
+	elif event.button == event.BUTTON3 and False:
+		menuNames = []
+		menuFunctions = []
+
+		menuNames.append("Notes")
+		menuFunctions.append(showNotes)
+
+		menuNames.append("Wiki")
+		menuFunctions.append(showWiki)
+
+		menuNames.append("Alerts")
+		menuFunctions.append(showAlerts)
+
+		menuNames.append("Audit")
+		menuFunctions.append(showAudit)
+
+		if event.source.isPropertyDefined("functions"):
+			data = event.source.functions
+			for i in range(data.getRowCount()):
+				menuNames.append(data.getValueAt(i,"menuName"))
+				menuFunctions.append(eval(data.getValueAt(i,"menuFunction")))
+
+		if system.tag.getAttribute(event.source.tagPath+"/Run_Status","HistoryEnabled"):
+			if system.ctg.findGraphPoint(event.source.tagPath+"/Run_Status")>=0:
+				menuNames.append("(-) Delete From Graph")
+				menuFunctions.append(menuDelete)
+			else:
+				menuNames.append("(+) Add To Graph")
+				menuFunctions.append(menuAdd)
+			if len(system.ctg.getPensList()):
+				menuNames.append("Clear Graph")
+				menuFunctions.append(menuClearGraph)
+
+				menuNames.append("Open Current Graph")
+				menuFunctions.append(menuOpenGraph)
+		showPopup(event,menuNames,menuFunctions)
