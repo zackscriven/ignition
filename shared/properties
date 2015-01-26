@@ -1,0 +1,8 @@
+def parse(string):
+	myDict = {}
+	for row in string.split("\n"):
+		index = row.find("=")
+		if index != -1:
+			myDict.update({str(row[:index]):str(row[index+1:])})
+	return myDict
+			
