@@ -1,0 +1,45 @@
+	
+	headers = ['Site'] #these are the headers that go at the top of the table--this starts as an empty list
+	tagPaths = []#these are the tagPaths that go in the table--this starts as an empty list
+	udtPaths = [] #these are the udtPaths used to get values--this starts as an empty list
+	fullPaths = [] #these are the fullPaths used to read values--this starts as an empty list
+	
+	# put headers and tag paths into lists... this creates two raw lists with all headers and raw tagPaths
+	data = self.parent.tagPaths
+	for row in range(data.rowCount):
+		tagPaths.append(str(data.getValueAt(row,0)))
+		headers.append(str(data.getValueAt(row, 1)))
+#	print headers
+	
+	# put udtPaths into a list
+	data = self.parent.udtPaths
+	for row in range(data.rowCount):
+		udtPaths.append(str(data.getValueAt(row,0)))
+	
+	# concatenate udt paths with tag paths, put into a fullPath list
+	for udtPath in udtPaths:
+		for tagPath in tagPaths:
+			fullPaths.append(udtPath + tagPath)
+	
+	# read all the full tagPaths to create a list of values
+	values = system.tag.readAll(fullPaths)
+	
+	#import time
+	#time.sleep(1)
+	
+	# build our dataset
+	data = []
+	colCount = len(tagPaths)
+	rowCount = len(udtPaths)
+	for y in range(rowCount):
+		name = udtPaths[y]
+		idx = name.rfind('/')
+		name = name[idx+1:]
+		row = [name]# reset row each loop
+		for x in range(colCount):
+			# append values to row indexing by the row index(y) multiplied by colCount plus column index(x)
+			row.append(values[y * colCount + x].value)
+		data.append(row)
+		
+	# put the data into the table
+	self.data = system.dataset.toDataSet(headers, data)	
