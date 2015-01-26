@@ -1,0 +1,30 @@
+# this funciton takes a tag path and executes a demand poll for that device based on its OPCItemPath and OPCServer
+def demandPoll(tagPath):
+	
+	# create a list of values we need to read based on tagPath given
+	readPaths = []
+	readPaths.append(tagPath + '.OPCItemPath')
+	readPaths.append(tagPath + '.OPCServer')
+	values = system.tag.readAll(readPaths)
+	
+	# store the values read into local variables
+	OPCItemPath = values[0].value
+	OPCServer = values[1].value
+	
+	# find the first . which returns us ns=2:s=SWAT_Modbus01.
+	x1 = OPCItemPath.find('.') + 1
+	channel = OPCItemPath[:x1]
+	OPCItemPath = OPCItemPath[x1:]
+	
+	# find the first . from the remaining path which returns device_name.
+	x2 = OPCItemPath.find('.') + 1
+	device = OPCItemPath[:x2]
+	
+	# add channel and device to get ns=2:s=SWAT_Modbus01.device_name.
+	demandPollPath = channel + device + '_System._DemandPoll'
+	
+	success = system.opc.writeValue(OPCServer,demandPollPath,1)
+	if success.isGood() != True:
+		message = 'Demand Poll to %s failed' % demandPollPath
+		title = 'Error'
+		system.gui.messageBox(message,title)
