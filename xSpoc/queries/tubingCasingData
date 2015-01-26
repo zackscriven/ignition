@@ -1,0 +1,14 @@
+SELECT
+	Date AS 'time_stamp',
+	TubingPressure,
+	CasingPressure
+FROM 
+	tblXDiagResults
+WHERE
+	NodeID = '{Root Container.selectedWell}'
+AND
+	Date Between '{Root Container.Date Range.startDate}'
+AND
+	'{Root Container.Date Range.endDate}'
+ORDER BY
+	Date Desc
