@@ -1,0 +1,76 @@
+tags = system.tag.browseTags(parentPath = '[Water Management]PWM/areas/giddings/Site',recursive = 1, sort = 'ASC')
+
+row = []
+data = []
+headers = ['wwtag','wwdesc','wwref','wwgroup','wwaccess','wwitem','wwaddress','wwdatatype','kepchannel','kepdevice','kepdatatype','ignsite','ignfullpath','ignparentpath','ignudtpath','igntagpath','igndatatype','ignopcpath','alarm','ScaleMode','RawLow','RawHigh','ScaledLow','ScaledHigh','EngUnit','EngLow','EngHigh','description','shortDescription','historicalProvider','aggregationMode','axis','subplot','enabled','color','dashPattern','renderStyle','lineWeight','shape','fillShape','groupName','digital','overrideAutoColor','hidden','userSelect','sortOrder','userRemovable']
+colors=['0000FF', 'FF8C00', '55FF55', 'FF55FF', '55FFFF', 'FFAFAF', '808080', 'C00000', '0000C0', '00C000', 'C0C000', 'C000C0','00C0C0', 'FFFF55', 'FF4040', '4040FF', '40FF40', 'FFFF40', 'FF40FF', '40FFFF', 'C0C0C0', '800000', '000080', '008000', '808000', '800080', '008080', 'FF8080', '8080FF', '80FF80', 'FFFF80', 'FF80FF', '80FFFF', 'FF5555', '5555FF', '55FF55', 'FF55FF', '55FFFF', 'FFAFAF', '808080', 'C00000', '0000C0', '00C000', 'C0C000', 'C000C0','00C0C0', 'FFFF55', 'FF4040', '4040FF', '40FF40', 'FFFF40', 'FF40FF', '40FFFF', 'C0C0C0', '800000', '000080', '008000', '808000', '800080', '008080', 'FF8080', '8080FF', '80FF80', 'FFFF80', 'FF80FF', '80FFFF', 'FF5555', '5555FF', '55FF55', 'FF55FF', '55FFFF', 'FFAFAF', '808080', 'C00000', '0000C0', '00C000', 'C0C000', 'C000C0','00C0C0', 'FFFF55', 'FF4040', '4040FF', '40FF40', 'FFFF40', 'FF40FF', '40FFFF', 'C0C0C0', '800000', '000080', '008000', '808000', '800080', '008080', 'FF8080', '8080FF', '80FF80', 'FFFF80', 'FF80FF', '80FFFF', 'FF5555', '5555FF', '55FF55', 'FF55FF', '55FFFF', 'FFAFAF', '808080', 'C00000', '0000C0', '00C000', 'C0C000', 'C000C0','00C0C0', 'FFFF55', 'FF4040', '4040FF', '40FF40', 'FFFF40', 'FF40FF', '40FFFF', 'C0C0C0', '800000', '000080', '008000', '808000', '800080', '008080', 'FF8080', '8080FF', '80FF80', 'FFFF80', 'FF80FF', '80FFFF', 'FF5555', '5555FF', '55FF55', 'FF55FF', '55FFFF', 'FFAFAF', '808080', 'C00000', '0000C0', '00C000', 'C0C000', 'C000C0','00C0C0', 'FFFF55', 'FF4040', '4040FF', '40FF40', 'FFFF40', 'FF40FF', '40FFFF', 'C0C0C0', '800000', '000080', '008000', '808000', '800080', '008080', 'FF8080', '8080FF', '80FF80', 'FFFF80', 'FF80FF', '80FFFF', 'FF5555', '5555FF', '55FF55', 'FF55FF', '55FFFF', 'FFAFAF', '808080', 'C00000', '0000C0', '00C000', 'C0C000', 'C000C0','00C0C0', 'FFFF55', 'FF4040', '4040FF', '40FF40', 'FFFF40', 'FF40FF', '40FFFF', 'C0C0C0', '800000', '000080', '008000', '808000', '800080', '008080', 'FF8080', '8080FF', '80FF80', 'FFFF80', 'FF80FF', '80FFFF', 'FF5555', '5555FF', '55FF55', 'FF55FF', '55FFFF', 'FFAFAF', '808080', 'C00000', '0000C0', '00C000', 'C0C000', 'C000C0','00C0C0', 'FFFF55', 'FF4040', '4040FF', '40FF40', 'FFFF40', 'FF40FF', '40FFFF', 'C0C0C0', '800000', '000080', '008000', '808000', '800080', '008080', 'FF8080', '8080FF', '80FF80', 'FFFF80', 'FF80FF', '80FFFF']
+x = -1
+max = len(colors)
+
+for tag in tags:
+	x += 1
+	if x >= max:
+		x = 0
+
+	row = []
+	readPaths = []
+	readPaths.append(tag.fullPath + '.OPCItemPath')
+	values = system.tag.readAll(readPaths)
+	opcItemPath = values[0].value
+
+	row.append('')			#	'wwtag'
+	row.append('')			#	'wwdesc'
+	row.append('')			#	'wwref'
+	row.append('')			#	'wwgroup'
+	row.append('')			#	'wwaccess'
+	row.append('')			#	'wwitem'
+	row.append(opcItemPath)#	'wwaddress'
+	row.append('')			#	'wwdatatype'
+	row.append(opcItemPath)#	'kepchannel'
+	row.append(opcItemPath)#	'kepdevice'
+	row.append(tag.dataType)#	'kepdatatype'
+	row.append('Site 2000H')#	'ignsite'
+	row.append('')			#	'ignfullpath'
+	row.append('[PWM]PWM/areas/giddings')#	'ignparentpath'
+	row.append(tag.dataType)#	'ignudtpath'
+	row.append(tag.fullPath)#	'igntagpath'
+	row.append(tag.dataType)#	'igndatatype'
+	row.append(opcItemPath)#	'ignopcpath'
+	row.append(0)			#	'alarm'
+	row.append(0)			#	'ScaleMode'
+	row.append(0)			#	'RawLow'
+	row.append(1000)		#	'RawHigh'
+	row.append(0)			#	'ScaledLow'
+	row.append(100)			#	'ScaledHigh'
+	row.append('Unit')		#	'EngUnit'
+	row.append(0)			#	'EngLow'
+	row.append(100)			#	'EngHigh'
+	row.append('')			#	'description'
+	row.append('short Desc')#	'shortDescription'
+	row.append('[HISTORIAN_PWM/.PWM]')#	'historicalProvider'
+	row.append('MinMax')#	'aggregationMode'
+	row.append('Default Axis')#	'axis'
+	row.append(tag.dataType)#	'subplot'
+	row.append(1)			#	'enabled'
+	row.append(colors[x])	#	'color'
+	row.append('')			#	'dashPattern'
+	row.append(tag.dataType)#	'renderStyle'
+	row.append(1)			#	'lineWeight'
+	row.append(0)			#	'shape'
+	row.append(1)			#	'fillShape'
+	row.append(tag.dataType)#	'groupName'
+	row.append(tag.dataType)#	'digital'
+	row.append(0)			#	'overrideAutoColor'
+	row.append(0)			#	'hidden'
+	row.append(1)			#	'userSelect'
+	row.append(0)			#	'sortOrder'
+	row.append(1)			#	'userRemovable'
+
+	data.append(row)
+	
+dataset = system.dataset.toDataSet(headers,data)
+filePath = system.dataset.exportCSV('data.csv',1,dataset)
+
+if filePath != None:
+	system.net.openURL('file://' + filePath)
+#print system.tag.read('[SWAT]SWAT/TB/ROCKER B 1-110 HW TB FAC/tank/oilGroup/level/value.PrimaryHistoryProvider').value
